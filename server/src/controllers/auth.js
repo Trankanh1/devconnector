@@ -28,7 +28,7 @@ exports.register = async (req, res, next) => {
 
         await user.save();
 
-        return response.success(res, {access_token: await generateAccessToken(user)});
+        return response.success(res, {access_token: generateAccessToken(user)});
     } catch (err) {
         response.serverError(res, err.message);
     }
@@ -54,20 +54,20 @@ exports.login = async (req, res, next) => {
             response.failure(res, { errors: [{ msg: 'Wrong email or password' }] });
         }
         
-        return response.success(res,{access_token: await generateAccessToken(user)});
+        return response.success(res, {access_token:  generateAccessToken(user)});
 
     } catch (err) {
         response.serverError(res, err.message)
     }
 }
 
-async function generateAccessToken(user){
+ function generateAccessToken(user){
     const payload = {
         user: {
             id: user.id,
         }
     };
-    
+
     const signOptions = {
         expiresIn: config.get('jwtExpirationInterval')
     }
