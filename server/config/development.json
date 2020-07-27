@@ -1,0 +1,5 @@
+{
+    "mongoURI": "mongodb+srv://web_user:Kimanh123@cluster0.yt5fw.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "jwtSecret": "5836E5B4D4A32BB277CFAEEF77334122",
+    "jwtExpirationInterval": 31536000
+}
