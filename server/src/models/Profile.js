@@ -1,54 +1,55 @@
 const mongoose = require('mongoose');
+const User = require(appDir + '/src/models/user');
 
 const ProfileSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
     },
-    company:{
+    company: {
         type: String
     },
     website: {
-        type:String
+        type: String
     },
     location: {
         type: String
     },
-    status:{
+    status: {
         type: String,
         required: true
     },
-    skills:{
+    skills: {
         type: [String],
         required: true
     },
-    bio:{
-        type:String,
+    bio: {
+        type: String,
     },
-    githubusername:{
-        type:String
+    githubusername: {
+        type: String
     },
-    experience:[
+    experience: [
         {
             title: {
                 type: String,
                 required: true
             },
-            company:{
+            company: {
                 type: String,
                 required: true
             },
-            location:{
-                type:String
+            location: {
+                type: String
             },
-            from:{
+            from: {
                 type: Date,
                 required: true
             },
-            to:{
+            to: {
                 type: Date
             },
-            current:{
+            current: {
                 type: Boolean,
                 default: false
             },
@@ -57,54 +58,54 @@ const ProfileSchema = new mongoose.Schema({
             }
         }
     ],
-    education:[
+    education: [
         {
-            school:{
+            school: {
                 type: String,
                 required: true
             },
-            degree:{
+            degree: {
                 type: String,
                 required: true
             },
-            fieldofstudy:{
+            fieldofstudy: {
                 type: String,
                 required: true
             },
-            from:{
+            from: {
                 type: Date,
                 required: true
             },
-            to:{
+            to: {
                 type: Date
             },
-            current:{
+            current: {
                 type: Boolean,
                 default: false
             },
-            description:{
+            description: {
                 type: String
             }
         }
     ],
-    social:{
+    social: {
         youtube: {
             type: String
         },
-        twitter:{
+        twitter: {
             type: String
         },
         facebook: {
             type: String
         },
-        linkedin:{
+        linkedin: {
             type: String
         },
         instagram: {
             type: String
         }
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now
     }
@@ -115,8 +116,18 @@ ProfileSchema.pre('save', function save(next) {
     next();
 })
 
+ProfileSchema.pre('remove', async function remove (next) {
+    try {
+        const user = await User.findOneAndRemove({ _id: this.user });
+        
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
 ProfileSchema.method({
-    makeResource(){
+    makeResource() {
         const resource = {};
         const fields = [
             "id",
@@ -133,13 +144,15 @@ ProfileSchema.method({
             "social",
             "date",
         ]
-        console.log(this);
-        fields.forEach((field)=>{
+   
+        fields.forEach((field) => {
             resource[field] = this[field];
         })
 
         return resource;
     }
 })
+
+
 
 module.exports = Profile = mongoose.model('profile', ProfileSchema);

@@ -28,7 +28,7 @@ const UserSchema = mongoose.Schema({
     }
 });
 
-UserSchema.pre("save", async function save(next) {
+UserSchema.pre('save', async function save(next) {
     try{
         const rounds = process.env.NODE_ENV === "development" ? 1 : 10;
         const salt = await bcrypt.genSalt(rounds);
@@ -39,6 +39,8 @@ UserSchema.pre("save", async function save(next) {
         next(err);
     }
 })
+
+
 
 UserSchema.statics.exists = async function (email) {
     let user = await this.findOne({ email });
