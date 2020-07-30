@@ -80,6 +80,11 @@ exports.removeComment = async(req, res, next) => {
             return response.failure(res, { msg: "Invalid data" });
         }
 
+        if(!object.isOwner(req.user.id)){
+            return response.failure(res, { msg: "User not authorized" });
+
+        }
+
         const comment = await commentService.remove(req, object);
 
         response.success(res, comment.makeResource())

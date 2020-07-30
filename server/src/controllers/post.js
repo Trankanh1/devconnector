@@ -65,6 +65,10 @@ exports.remove = async (req, res, next) => {
             response.failure(res, { msg: "Post not found" });
         }
 
+        if (!post.isOwner(req.user.id)){
+            response.failure(res, { msg: "User not authorized" });
+        }
+        
         await post.remove();
 
         response.success(res, post);
