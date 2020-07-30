@@ -15,5 +15,7 @@ app.get('/', (req, res) => res.send("API running"));
 app.use('/api/users', require('./src/routes/api/users'));
 app.use('/api/auth', require('./src/routes/api/auth'));
 app.use('/api/posts', require('./src/routes/api/posts'));
+app.use('/api/comments', require('./src/routes/api/comments'));
 app.use('/api/profile', require('./src/routes/api/profile'));
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

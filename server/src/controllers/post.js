@@ -5,6 +5,7 @@ const resource = require(appDir + '/src/helpers/resource');
 const reactionService = require(appDir + '/src/services/reaction');
 const { validationResult } = require('express-validator');
 
+
 exports.create = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -77,19 +78,23 @@ exports.remove = async (req, res, next) => {
 }
 
 exports.reaction = async (req, res, next) => {
-    try {
-        const {oid} = req.body;
-        const object = await helper.getObject(oid);
- 
-        if (!object) {
-         return  response.failure(res, { msg: "Invalid data" });
-        }
-  
-        await reactionService.create(req, object);
-
-        response.success(res, {msg: "Sucessfully"})
-    } catch(err){
-        response.serverError(res, err.message);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return response.failure(res, { errors: errors.array() });
     }
 
+    try {
+        const { oid } = req.body;
+        const object = await helper.getObject(oid);
+
+        if (!object) {
+            return response.failure(res, { msg: "Invalid data" });
+        }
+
+        await reactionService.react(req, object);
+
+        response.success(res, { msg: "Sucessfully" })
+    } catch (err) {
+        response.serverError(res, err.message);
+    }
 }

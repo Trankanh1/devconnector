@@ -40,6 +40,4 @@ router.delete('/:postId',auth, PostController.remove);
  */
 router.post('/reaction',[auth, validator.reaction()], PostController.reaction);
 
-
-
 module.exports = router;
