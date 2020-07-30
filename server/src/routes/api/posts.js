@@ -33,7 +33,12 @@ router.get('/:postId',auth, PostController.get);
  */
 router.delete('/:postId',auth, PostController.remove);
 
-
+/**
+ * @route  POST api/posts/reaction
+ * @desc   React to a post
+ * @access Private
+ */
+router.post('/reaction',[auth, validator.reaction()], PostController.reaction);
 
 
 

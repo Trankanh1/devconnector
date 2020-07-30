@@ -1,7 +1,8 @@
 const response = require(appDir + '/src/response/response');
-const Post = require(appDir + '/src/models/Post');
-
-const resource = require(appDir + '/src/helpers/common');
+const Post = require(appDir + '/src/models/post');
+const helper = require(appDir + '/src/helpers/common');
+const resource = require(appDir + '/src/helpers/resource');
+const reactionService = require(appDir + '/src/services/reaction');
 const { validationResult } = require('express-validator');
 
 exports.create = async (req, res, next) => {
@@ -32,7 +33,7 @@ exports.create = async (req, res, next) => {
 exports.getAll = async (req, res, next) => {
     try {
         const posts = await Post.find().sort({ date: -1 });
-        response.success(res, posts);
+        response.success(res, resource.collection(posts));
     } catch (err) {
         response.serverError(res);
     }
@@ -45,23 +46,24 @@ exports.get = async (req, res, next) => {
             response.failure(res, { msg: "Post not found" });
         }
 
-        response.success(res, post);
+        response.success(res, post.makeResource());
     } catch (err) {
         if (err.kind == "ObjectId") {
             response.failure(res, { msg: "Post not found" });
         }
 
-        response.serverError(res);
+        response.serverError(res, err.message);
     }
 }
 
 
 exports.remove = async (req, res, next) => {
     try {
-        const post = await Post.findById(req.params.postId);
+        const post = await Post.findOne({ _id: req.params.postId, user: req.user.id });
         if (!post) {
             response.failure(res, { msg: "Post not found" });
         }
+
         await post.remove();
 
         response.success(res, post);
@@ -72,4 +74,22 @@ exports.remove = async (req, res, next) => {
 
         response.serverError(res);
     }
+}
+
+exports.reaction = async (req, res, next) => {
+    try {
+        const {oid} = req.body;
+        const object = await helper.getObject(oid);
+ 
+        if (!object) {
+         return  response.failure(res, { msg: "Invalid data" });
+        }
+  
+        await reactionService.create(req, object);
+
+        response.success(res, {msg: "Sucessfully"})
+    } catch(err){
+        response.serverError(res, err.message);
+    }
+
 }

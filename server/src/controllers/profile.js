@@ -1,5 +1,5 @@
 const response = require(appDir + '/src/response/response');
-const Profile = require(appDir + '/src/models/Profile');
+const Profile = require(appDir + '/src/models/profile');
 const resource = require(appDir + '/src/helpers/common');
 const request = require('request');
 const config = require('config');
