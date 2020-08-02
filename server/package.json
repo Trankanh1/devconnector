@@ -5,7 +5,9 @@
     "main": "server.js",
     "scripts": {
         "start": "node server",
-        "server": "nodemon ./server.js"
+        "server": "nodemon ./server.js",
+        "client": "npm start --prefix /Users/trankimanh/Documents/Devconnector/client",
+        "dev": "concurrently \"npm run client\" \"npm run server\"  "
     },
     "author": "June Tran",
     "license": "MIT",

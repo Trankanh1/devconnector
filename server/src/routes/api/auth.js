@@ -20,13 +20,13 @@ router.get('/', auth, async(req, res) =>{
  * @desc   Register user
  * @access Public
  */
-
 router.post('/register', validator.register(), AuthController.register);
+
 /**
  * @route  POST api/login
  * @desc   User Login
  * @access Public
  */
-router.post('/', validator.login(), AuthController.login);
+router.post('/login', validator.login(), AuthController.login);
 
 module.exports = router;

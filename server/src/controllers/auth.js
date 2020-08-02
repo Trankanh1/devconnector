@@ -36,18 +36,19 @@ exports.register = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
+  
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return response.failure(res, errors);
     }
-
+  
     try {
         const { email, password } = req.body;
         let user = await User.findOne({ email });
         if (!user) {
-            response.failure({ errors: [{ msg: 'The email doesn\'t exists' }] });
+            return response.failure(res, { errors: [{ msg: 'The email doesn\'t exists' }] });
         }
-
+       
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
